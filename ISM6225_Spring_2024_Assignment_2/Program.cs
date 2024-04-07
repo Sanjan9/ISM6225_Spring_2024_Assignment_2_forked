@@ -96,32 +96,43 @@ namespace ISM6225_Spring_2024_Assignment_2
         */
 
         public static int RemoveDuplicates(int[] nums)
+{
+    try
+    {
+        // Time Complexity: O(n) - Traversing through the array once, where n is the number of elements in nums.
+        // Space Complexity: O(1) - Constant space complexity as the algorithm modifies nums in-place.
+
+        // Check if the array is empty
+        if (nums.Length == 0)
         {
-            try
+            return 0;
+        }
+
+        // Initialize a pointer j to track the position to which unique elements will be moved
+        int j = 0;
+
+        // Iterate through the array starting from the second element
+        for (int i = 1; i < nums.Length; i++)
+        {
+            // If the current element is different from the element at index j
+            if (nums[j] != nums[i])
             {
-                // Write your code here and you can modify the return value according to the requirements
-
-                if (nums.Length == 0)
-                {
-                    return 0;
-                }
-
-                int j = 0;
-                for (int i = 1; i < nums.Length; i++)
-                {
-                    if (nums[j] != nums[i])
-                    {
-                        nums[++j] = nums[i];
-                    }
-                }
-
-                return j + 1;
-            }
-            catch (Exception)
-            {
-                throw;
+                // Move the current element to the position after j and increment j
+                nums[++j] = nums[i];
             }
         }
+
+        // Return the length of the resulting array (number of unique elements)
+        return j + 1;
+    }
+    catch (Exception)
+    {
+        // If an exception occurs, re-throw it
+        throw;
+    }
+}
+//self reflection : In assessing my code, I noticed it effectively removes duplicates from sorted arrays using a two-pointer approach. While I ensured clarity with comments and addressed edge cases, such as empty arrays, I recognize the need for refining error handling and considering scenarios beyond sorted arrays to enhance versatility.
+
 
         /*
         
@@ -146,29 +157,41 @@ namespace ISM6225_Spring_2024_Assignment_2
         */
 
         public static IList<int> MoveZeroes(int[] nums)
-        {
-            try
-            {
-                // Write your code here and you can modify the return value according to the requirements
-                //The code traverses the entire array nums once in a single pass, which results in a time complexity of O(n), where n is the number of elements in the array.
-                //The space complexity is O(1) (constant space) because the algorithm modifies the input array in-place without using any additional data structures that grow with the input size.
-                int left = 0;
+{
+    try
+    {
+        // The code traverses the entire array nums once in a single pass, which results in a time complexity of O(n),
+        // where n is the number of elements in the array.
+        // The space complexity is O(1) (constant space) because the algorithm modifies the input array in-place
+        // without using any additional data structures that grow with the input size.
 
-                for (int i = 0; i < nums.Length; i++)
-                {
-                    if (nums[i] != 0)
-                    {
-                        (nums[left], nums[i]) = (nums[i], nums[left]);
-                        left++;
-                    }
-                }
-                return nums;
-            }
-            catch (Exception)
+        // Initialize the left pointer to track the position to which non-zero elements will be moved
+        int left = 0;
+
+        // Traverse the array
+        for (int i = 0; i < nums.Length; i++)
+        {
+            // If the current element is non-zero
+            if (nums[i] != 0)
             {
-                throw;
+                // Swap the current element with the element at the left pointer's position
+                (nums[left], nums[i]) = (nums[i], nums[left]);
+                // Move the left pointer to the next position
+                left++;
             }
         }
+
+        // Return the modified array
+        return nums;
+    }
+    catch (Exception)
+    {
+        // If an exception occurs, re-throw it
+        throw;
+    }
+}
+//self reflection : Upon reviewing my code, I've noted its effectiveness in moving zeroes to the end of an array in a single pass, utilizing O(1) space complexity and handling exceptions appropriately. However, clarity could be improved through better variable naming and additional comments for readability and understanding. Overall, the code demonstrates competency in algorithmic problem-solving, with potential for refinement in clarity and robustness.
+
 
         /*
 
@@ -209,49 +232,83 @@ namespace ISM6225_Spring_2024_Assignment_2
         */
 
         public static IList<IList<int>> ThreeSum(int[] nums)
+{
+    try
+    {
+        // Time Complexity: O(n^2) - Quadratic time complexity where n is the length of the input array nums
+        // Space Complexity: O(n) - Linear space complexity as a list of lists (triplets) is used to store the result, which can potentially grow up to the size of the input array
+
+        // Check if the input array has less than 3 elements, in which case no triplets can be formed
+        if (nums.Length < 3) return new List<IList<int>>();
+
+        // Sort the input array in ascending order to facilitate the two-pointer approach
+        Array.Sort(nums);
+
+        // Initialize a list to store the triplets
+        var triplets = new List<IList<int>>();
+
+        // Iterate through the array to find triplets that sum up to zero
+        for (int i = 0; i < nums.Length - 2; i++)
         {
-            try
+            // If the first number is greater than 0, then the sum cannot be 0, exit the loop
+            if (nums[i] > 0) break;
+
+            // Skip repeated numbers to avoid duplicate triplets
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+
+            // Initialize left and right pointers
+            int left = i + 1;
+            int right = nums.Length - 1;
+
+            // Use two-pointer approach to find triplets that sum up to zero
+            while (left < right)
             {
-                // Write your code here and you can modify the return value according to the requirements
-                if (nums.Length < 3) return new List<IList<int>>();
+                // Calculate the sum of current triplet
+                int sum = nums[i] + nums[left] + nums[right];
 
-                Array.Sort(nums);
-                var triplets = new List<IList<int>>();
-
-                for (int i = 0; i < nums.Length - 2; i++)
+                // If sum is zero, add the triplet to the result list
+                if (sum == 0)
                 {
-                    if (nums[i] > 0) break; // if the first number is greater than 0, then the sum cannot be 0
+                    triplets.Add(new List<int>() { nums[i], nums[left], nums[right] });
 
-                    if (i > 0 && nums[i] == nums[i - 1]) continue; // skipping repeated numbers to avoid repeating triples
+                    // Skip repeated numbers to avoid duplicate triplets
+                    while (left < right && nums[left] == nums[left + 1]) left++;
+                    while (left < right && nums[right] == nums[right - 1]) right--;
 
-                    int left = i + 1;
-                    int right = nums.Length - 1;
-
-                    while (left < right)
-                    {
-                        int sum = nums[i] + nums[left] + nums[right];
-
-                        if (sum == 0)
-                        {
-                            triplets.Add(new List<int>() { nums[i], nums[left], nums[right] });
-                            while (left < right && nums[left] == nums[left + 1]) left++; // skipping repeated numbers to avoid repeating triples
-                            while (left < right && nums[right] == nums[right - 1]) right--; // skipping repeated numbers to avoid repeating triples
-                            left++;
-                            right--;
-                        }
-                        else if (sum < 0)
-                            left++;
-                        else
-                            right--;
-                    }
+                    // Move the pointers
+                    left++;
+                    right--;
                 }
-                return triplets;
-            }
-            catch (Exception)
-            {
-                throw;
+                // If sum is less than zero, move the left pointer to increase the sum
+                else if (sum < 0)
+                {
+                    left++;
+                }
+                // If sum is greater than zero, move the right pointer to decrease the sum
+                else
+                {
+                    right--;
+                }
             }
         }
+
+        // Return the list of triplets
+        return triplets;
+    }
+    catch (Exception)
+    {
+        // If an exception occurs, re-throw it
+        throw;
+    }
+}
+//self reflection : Upon reviewing the code, it proficiently identifies triplets summing to zero using a two-pointer technique with O(n^2) time complexity. While efficiently handling duplicate triplets and ensuring correctness, it could benefit from improved clarity in variable naming and additional comments for enhanced readability. Overall, the code demonstrates adeptness in algorithmic problem-solving, with room for refinement in code organization and documentation.
+
+
+
+
+
+
+
 
         /*
 
@@ -276,30 +333,42 @@ namespace ISM6225_Spring_2024_Assignment_2
         */
 
         public static int FindMaxConsecutiveOnes(int[] nums)
+{
+    try
+    {
+        // Time Complexity: O(n) - Linear time complexity where n is the length of the input array nums
+        // Space Complexity: O(1) - Constant space complexity as only a fixed number of variables are used
+
+        // Initialize variables to store the maximum consecutive ones and the current consecutive ones
+        int res = 0; // Maximum consecutive ones found so far
+        int temp = 0; // Current consecutive ones being counted
+
+        // Iterate through the array to find the maximum consecutive ones
+        for (int i = 0; i < nums.Length; i++)
         {
-            try
+            // If the current element is 0, update the maximum consecutive ones found so far and reset the current count
+            if (nums[i] == 0)
             {
-                // Write your code here and you can modify the return value according to the requirements
-                int res = 0;
-                int temp = 0;
-
-                for (int i = 0; i < nums.Length; i++)
-                {
-                    if (nums[i] == 0)
-                    {
-                        res = Math.Max(res, temp);
-                        temp = 0;
-                    }
-                    else temp++;
-                }
-
-                return Math.Max(res, temp);
+                res = Math.Max(res, temp); // Update res to the maximum of res and temp
+                temp = 0; // Reset temp to 0 for counting the consecutive ones from the next element
             }
-            catch (Exception)
+            // If the current element is 1, increment the count of consecutive ones
+            else
             {
-                throw;
+                temp++; // Increment temp to count consecutive ones
             }
         }
+
+        // Return the maximum consecutive ones found, considering the last set of consecutive ones
+        return Math.Max(res, temp);
+    }
+    catch (Exception)
+    {
+        // If an exception occurs, re-throw it
+        throw;
+    }
+}
+//self reflection : Upon review, the code efficiently computes the maximum consecutive ones in an array, with a time complexity of O(n) and space complexity of O(1). While effectively handling consecutive ones and zeros, it could enhance clarity through improved variable naming and additional comments for better understanding.
 
         /*
 
@@ -325,33 +394,42 @@ namespace ISM6225_Spring_2024_Assignment_2
         */
 
         public static int BinaryToDecimal(int binary)
+{
+    try
+    {
+        // Time Complexity: O(log(binary))
+        // Space Complexity: O(log(binary))
+
+        // Convert the binary number to a string
+        string str1 = binary.ToString();
+        String num = str1;
+        int dec_value = 0;
+
+        // Initializing base value to 1, i.e., 2^0
+        int base1 = 1;
+
+        // Get the length of the binary string
+        int len = num.Length;
+
+        // Iterate through the binary string to calculate the decimal value
+        for (int i = len - 1; i >= 0; i--)
         {
-            try
-            {
-                // Write your code here and you can modify the return value according to the requirements
-                string str1 = binary.ToString();
-                String num = str1;
-                int dec_value = 0;
-
-                // Initializing base value to 1,
-                // i.e 2^0
-                int base1 = 1;
-
-                int len = num.Length;
-                for (int i = len - 1; i >= 0; i--)
-                {
-                    if (num[i] == '1')
-                        dec_value += base1;
-                    base1 = base1 * 2;
-                }
-
-                return dec_value;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            // If the current digit is '1', add the corresponding power of 2 to the decimal value
+            if (num[i] == '1')
+                dec_value += base1;
+            base1 = base1 * 2;
         }
+
+        // Return the decimal value
+        return dec_value;
+    }
+    catch (Exception)
+    {
+        // If an exception occurs, re-throw it
+        throw;
+    }
+}
+//self reflection : The code efficiently converts binary to decimal, with O(log(binary)) time and space complexity. While accurately computing the decimal value iteratively, it could benefit from clearer variable naming and additional comments for improved readability. Overall, it demonstrates competency in binary-to-decimal conversion, with potential for enhanced clarity and documentation
 
         /*
 
@@ -379,34 +457,58 @@ namespace ISM6225_Spring_2024_Assignment_2
         */
 
         public static int MaximumGap(int[] nums)
+{
+    try
+    {
+        // Check if the input array has less than 2 elements
+        // Time Complexity: O(1) - Constant time to check array length
+        // Space Complexity: O(1) - No additional space used for this operation
+        if (nums.Length < 2)
+            return 0;
+        
+        // Sort the input array in ascending order // O(nlogn)
+        // Time Complexity: O(nlogn) - Sorting an array of length n
+        // Space Complexity: O(1) - Sorting is performed in-place
+        Array.Sort(nums);
+
+        // Initialize variables to store the maximum gap and the difference between adjacent elements
+        // Time Complexity: O(1) - Constant time to initialize variables
+        // Space Complexity: O(1) - Only a constant amount of memory is used
+        int max = 0;
+        int diff = 0;
+
+        // Iterate through the sorted array to find the maximum gap between adjacent elements
+        // Time Complexity: O(n) - Iterating through the array once
+        // Space Complexity: O(1) - No additional space used within the loop
+        for (int i = 0; i < nums.Length - 1; i++)
         {
-            try
+            // Calculate the absolute difference between adjacent elements
+            // Time Complexity: O(1) - Constant time to calculate absolute difference
+            // Space Complexity: O(1) - No additional space used for this calculation
+            diff = Math.Abs(nums[i] - nums[i + 1]);
+
+            // Update the maximum gap if the current difference is greater
+            // Time Complexity: O(1) - Constant time to compare and update variables
+            // Space Complexity: O(1) - No additional space used for this comparison/update
+            if (diff > max)
             {
-                // Write your code here and you can modify the return value according to the requirements
-                if (nums.Length < 2)
-                    return 0;
-                Array.Sort(nums);
-
-
-                int max = 0;
-                int diff = 0;
-                for (int i = 0; i < nums.Length - 1; i++)
-                {
-                    diff = Math.Abs(nums[i] - nums[i + 1]);
-                    if (diff > max)
-                    {
-                        max = diff;
-                    }
-                }
-
-                return max;
-            }
-            catch (Exception)
-            {
-                throw;
+                max = diff;
             }
         }
 
+        // Return the maximum gap found in the array
+        // Time Complexity: O(1) - Constant time to return a variable
+        // Space Complexity: O(1) - No additional space used for returning a variable
+        return max;
+    }
+    catch (Exception)
+    {
+        // If an exception occurs, re-throw it
+        throw;
+    }
+}
+
+//self reflection : The code efficiently finds the maximum gap between adjacent elements in a sorted array with O(nlogn) time complexity.
         /*
 
         Question:7
@@ -435,24 +537,32 @@ namespace ISM6225_Spring_2024_Assignment_2
         */
 
         public static int LargestPerimeter(int[] nums)
-        {
-            try
-            {
-                // Write your code here and you can modify the return value according to the requirements
-                Array.Sort(nums); // assume O(nlogn)
+{
+    try
+    {
+        // Sort the input array in ascending order // O(nlogn)
+        Array.Sort(nums);
 
-                for (int i = nums.Length - 1; i >= 2; i--) // O(n)
-                {
-                    if (nums[i] < nums[i - 1] + nums[i - 2])
-                        return nums[i] + nums[i - 1] + nums[i - 2];
-                }
-                return 0;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+        // Iterate through the sorted array starting from the largest number
+        // Time Complexity: O(n)
+        // Explanation: The loop iterates through the array once.
+        for (int i = nums.Length - 1; i >= 2; i--)
+        {
+            // Check if the current triplet forms a valid triangle
+            if (nums[i] < nums[i - 1] + nums[i - 2])
+                // If the triplet forms a valid triangle, return the perimeter
+                return nums[i] + nums[i - 1] + nums[i - 2];
         }
+        // If no valid triangle is found, return 0
+        return 0;
+    }
+    catch (Exception)
+    {
+        // If an exception occurs, re-throw it
+        throw;
+    }
+}
+//self reflection : Code sorts array, iterates to find largest valid triangle perimeter (O(nlogn) + O(n)).Redundant try-catch block, exceptions not expected, can be removed.Optimization possible by directly finding largest valid triangle, avoiding sorting.
 
         /*
 
@@ -496,23 +606,34 @@ namespace ISM6225_Spring_2024_Assignment_2
         */
 
         public static string RemoveOccurrences(string s, string part)
+{
+    try
+    {
+        // Iterate until 'part' is found in 's'
+        // Time Complexity: O(n * m)
+        // Explanation: In the worst case, this loop iterates through the entire input string 's' of length 'n' for each occurrence of the substring 'part' of length 'm'.
+        int index;
+        
+        // Loop until 'part' is found in 's'
+        while ((index = s.IndexOf(part)) != -1)
         {
-            try
-            {
-                // Write your code here and you can modify the return value according to the requirements
-                int index;
-                while ((index = s.IndexOf(part)) != -1)
-                {
-                    s = s.Remove(index, part.Length);
-                }
-                return s;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            // Remove 'part' from 's' starting at index 'index' with length 'part.Length'
+            s = s.Remove(index, part.Length);
         }
+        
+        // Return the modified string 's' after all occurrences of 'part' are removed
+        // Space Complexity: O(1)
+        // Explanation: The function operates in-place without using any additional space that grows with the input size, resulting in a constant space complexity O(1).
+        return s;
+    }
+    catch (Exception)
+    {
+        // If an exception occurs, re-throw it
+        throw;
+    }
+}
 
+// self reflection : Function removes all occurrences of 'part' from 's' with O(n * m) time complexity, iterating through 's' for each occurrence of 'part'.Redundant try-catch block, as exceptions not expected; can be removed to simplify the code.Space complexity is O(1) as the function operates in-place without using additional space that grows with input size.
         /* Inbuilt Functions - Don't Change the below functions */
         static string ConvertIListToNestedList(IList<IList<int>> input)
         {
